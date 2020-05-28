@@ -16,7 +16,7 @@ import { elements, renderLoader, clearLoader } from './views/base';
 */
 
 const state {};
-window.state = state;
+
 // Search controller
 
 const controlSearch = async() => {
@@ -139,7 +139,7 @@ const controller = () => {
         //toggle the like button
         likesView.toggleLikeBtn(true);
         // add like to UI List
-
+        likesView.renderLike(newLike);
     // User HAS liked recipe
     } else {
         // remove like to the state
@@ -147,10 +147,24 @@ const controller = () => {
         //toggle the like button
         likesView.toggleLikeBtn(false);
         // remove like to UI List
-
+        likesView.deleteLike(currentID);
     }
+    likesView.toggleLikeMenu(state.likes.getNumsLikes);
 };
 
+// Restore like recipes on page load
+window.addEventListener('load', () => {
+    state.likes = new Likes();
+
+    //restore likes
+    state.likes.readStorage();
+
+    //Toggle like menu button
+    likesView.toggleLikeMenu(state.likes.getNumsLikes());
+    
+    // Render the existing likes
+    state.likes.likes.forEach(like => likesViews.renderLike(like));
+});
 
 // handling recipe button clicks
 elements.recipe.addEventListener('click', e => {
